@@ -2,7 +2,10 @@
 
 import { z } from 'zod'
 
-export type ConvertFormState = {
+const API_KEY = '78684310-850d-427a-8432-4a6487f6dbc4'
+const PDF_API_URL = `http://95.217.134.12:4010/create-pdf?apiKey=${API_KEY}`
+
+export type ConvertToPdfFormState = {
   errors: {
     text?: string[]
     _form?: string[]
@@ -16,9 +19,9 @@ const createToPdfSchema = z.object({
 })
 
 export const convertToPdf = async (
-  prevState: ConvertFormState,
+  prevState: ConvertToPdfFormState,
   formData: FormData,
-): Promise<ConvertFormState> => {
+): Promise<ConvertToPdfFormState> => {
   const parsedData = createToPdfSchema.safeParse({
     text: formData.get('text'),
   })
@@ -32,14 +35,19 @@ export const convertToPdf = async (
   const { text } = parsedData.data
 
   try {
-    const response = await fetch(
-      'http://95.217.134.12:4010/create-pdf?apiKey=78684310-850d-427a-8432-4a6487f6dbc4',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-      },
-    )
+    const response = await fetch(PDF_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    })
+
+    if (!response.ok) {
+      return {
+        errors: {
+          _form: [`Server error: ${response.status} ${response.statusText}`],
+        },
+      }
+    }
 
     const blob = await response.blob()
     const buffer = Buffer.from(await blob.arrayBuffer())

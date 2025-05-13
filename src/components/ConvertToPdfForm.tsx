@@ -1,25 +1,37 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import clsx from 'clsx'
 
 import * as actions from '@/actions'
-import type { ConvertFormState } from '@/actions/convert-to-pdf'
-import { PdfPreview } from './PdfPreview'
+import type { ConvertToPdfFormState } from '@/actions/convert-to-pdf'
 
-const initialState: ConvertFormState = {
+const initialState: ConvertToPdfFormState = {
   errors: {},
   text: '',
   base64: undefined,
 }
 
-export const ConvertToPdfForm = () => {
-  const [state, formAction, pending] = useActionState<ConvertFormState, FormData>(
+type ConvertToPdfFormProps = {
+  onSuccess?: (text: string, base64: string) => void
+}
+
+export const ConvertToPdfForm = ({ onSuccess }: ConvertToPdfFormProps) => {
+  const [text, setText] = useState('')
+  const [state, formAction, pending] = useActionState<ConvertToPdfFormState, FormData>(
     actions.convertToPdf,
     initialState,
   )
 
   const hasFormError = !!state.errors?._form?.length
+
+  useEffect(() => {
+    if (state.base64 && !hasFormError) {
+      onSuccess?.(state.text ?? '', state.base64)
+      setText('')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.base64])
 
   return (
     <form
@@ -37,7 +49,8 @@ export const ConvertToPdfForm = () => {
           name="text"
           id="text"
           placeholder="Enter your text here..."
-          defaultValue={state.text}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
           disabled={pending}
           className={clsx(
             'block h-40 w-full resize-none rounded-md border p-3 focus:ring-2 focus:outline-none',
@@ -65,13 +78,6 @@ export const ConvertToPdfForm = () => {
       </button>
 
       {hasFormError && <p className="mt-1 font-medium text-red-600">{state.errors._form?.[0]}</p>}
-
-      {state.base64 && !hasFormError && (
-        <div className="my-6">
-          <h3 className="mb-2 font-semibold">Preview:</h3>
-          <PdfPreview base64={state.base64} />
-        </div>
-      )}
     </form>
   )
 }
