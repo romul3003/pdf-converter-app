@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
-
-export type HistoryEntry = {
-  id: string
-  text: string
-  base64: string
-  createdAt: number
-}
+import { HistoryEntry } from '@/types/types'
 
 const LOCAL_STORAGE_KEY = 'pdf_history'
 

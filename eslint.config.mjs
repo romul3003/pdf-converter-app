@@ -2,7 +2,6 @@ import { FlatCompat } from '@eslint/eslintrc'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
-// Плагіни
 import reactHooks from 'eslint-plugin-react-hooks'
 import prettierConfig from 'eslint-config-prettier'
 
