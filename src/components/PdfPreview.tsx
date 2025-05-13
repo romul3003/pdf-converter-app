@@ -16,6 +16,9 @@ type PdfPreviewProps = {
   base64: string
 }
 
+const buttonStyles =
+  'cursor-pointer rounded bg-gray-200 px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50'
+
 export const PdfPreview = ({ base64 }: PdfPreviewProps) => {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState<number>(1)
@@ -66,15 +69,15 @@ export const PdfPreview = ({ base64 }: PdfPreviewProps) => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-4">
+    <div className="space-y-4">
       <div
         ref={containerRef}
-        className="w-full border shadow-sm"
+        className="relative aspect-[1/1.414] w-full border shadow-sm"
       >
         <Document
           file={file}
           onLoadSuccess={onDocumentLoadSuccess}
-          loading={<p className="p-4">Loading PDF...</p>}
+          loading={<div className="absolute inset-0 z-10 animate-pulse rounded bg-gray-200" />}
           error={<p className="p-4 text-red-600">Failed to load PDF.</p>}
         >
           <Page
@@ -89,7 +92,7 @@ export const PdfPreview = ({ base64 }: PdfPreviewProps) => {
           type="button"
           onClick={goToPrevPage}
           disabled={pageNumber <= 1}
-          className="rounded bg-gray-200 px-4 py-2 disabled:opacity-50"
+          className={buttonStyles}
         >
           Previous
         </button>
@@ -102,7 +105,7 @@ export const PdfPreview = ({ base64 }: PdfPreviewProps) => {
           type="button"
           onClick={goToNextPage}
           disabled={numPages !== null && pageNumber >= numPages}
-          className="cursor-pointer rounded bg-gray-200 px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className={buttonStyles}
         >
           Next
         </button>

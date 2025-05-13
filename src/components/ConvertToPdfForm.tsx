@@ -53,7 +53,7 @@ export const ConvertToPdfForm = ({ onSuccess }: ConvertToPdfFormProps) => {
           onChange={(event) => setText(event.target.value)}
           disabled={pending}
           className={clsx(
-            'block h-40 w-full resize-none rounded-md border p-3 focus:ring-2 focus:outline-none',
+            'block min-h-[10rem] w-full resize-y rounded-md border p-3 focus:ring-2 focus:outline-none',
             state.errors?.text
               ? 'border-red-500 focus:ring-red-500'
               : 'border-gray-300 focus:ring-blue-500',

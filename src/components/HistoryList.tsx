@@ -17,7 +17,7 @@ export const HistoryList = ({ history, onSelectAction }: HistoryListProps) => {
         <button
           key={entry.id}
           onClick={() => onSelectAction(entry)}
-          className="block w-full rounded bg-gray-100 px-4 py-2 text-left hover:bg-gray-200"
+          className="block w-full rounded bg-gray-100 px-4 py-2 text-left hover:cursor-pointer hover:bg-gray-200"
         >
           {new Date(entry.createdAt).toLocaleString()} —{' '}
           <span className="line-clamp-1 text-gray-700 italic">{entry.text.slice(0, 50)}</span>
